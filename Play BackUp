@@ -1,0 +1,376 @@
+package com.davegame.lunerlander.states;
+
+import static com.davegame.lunerlander.handlers.B2DVars.PPM;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.davegame.lunerlander.gameobjects.Player;
+import com.davegame.lunerlander.gameobjects.TestLevel;
+import com.davegame.lunerlander.handlers.GameStateManager;
+import com.davegame.lunerlander.handlers.MyContactListener;
+import com.davegame.lunerlander.handlers.MyInput;
+import com.davegame.lunerlander.main.Game;
+
+public class Play extends GameState{
+	
+	private BitmapFont font = new BitmapFont();
+	
+	
+	private World world; //create a physics worls
+	
+	private TestLevel testLevel;
+	
+	private Box2DDebugRenderer b2dr;
+	
+	private OrthographicCamera b2dCam;
+	
+	private Body box;
+	
+	private Body craft;
+	private Player playerCraft;
+	
+	private Body legs, legs1;
+	private Vector2 craftPos;
+	private float bodyAngle;
+	
+	private BodyDef bdef;
+	private FixtureDef fdef; 
+	private PolygonShape shape;
+	
+	
+	private Vector2[] vertices;
+	
+	private Vector2 velocity;
+	private Vector2 velocity2;
+	private static float fuel;
+	
+	private boolean isLanded;
+	private static boolean isCrashed;
+	
+	private MyContactListener cl;
+	
+	public Play(GameStateManager gsm){
+		super(gsm);
+		
+		//Create a new level type here, and set it to equal world;
+		
+		//isLanded = false;
+		//isCrashed = false;
+		
+		//velocity = new Vector2(0,0);
+		velocity2 = new Vector2(0,0);
+		//fuel = 100;
+		testLevel = new TestLevel(new Vector2(0,0));
+		
+		world = new World(new Vector2(0,-1.8f), true); //true ignores bodies that are asleep
+		cl = new MyContactListener();
+		world.setContactListener(cl);
+		world = testLevel.getWorld();
+		b2dr = new Box2DDebugRenderer();
+		bdef = new BodyDef();
+		
+		fdef = new FixtureDef();
+		
+		//fdef.restitution = 1;
+		
+		//fdef.friction = 0;
+		shape = new PolygonShape();
+		
+		playerCraft = new Player();
+		playerCraft.createBody(world);
+		
+		//createShip();
+		createPlatform();
+		//Create a platform
+		
+		
+		//Create new camera to render scaled down shit
+		b2dCam = new OrthographicCamera();
+		b2dCam.setToOrtho(false, Game.V_WIDTH/10,Game.V_HEIGHT/10);
+		
+	}
+
+	@Override
+	public void handleInput() {
+		if(MyInput.isPressed(MyInput.BUTTON_ESCAPE)){
+			gsm.setState(GameStateManager.MENU);
+			}
+		if(MyInput.isDown(MyInput.BUTTON_LEFT)){
+			
+			//rotateLeft();
+			
+		}if(MyInput.isDown(MyInput.BUTTON_RIGHT)){
+			//rotateRight();
+		}if(!MyInput.isDown(MyInput.BUTTON_LEFT)&!MyInput.isDown(MyInput.BUTTON_RIGHT)){
+			
+			//stopRotate();
+		}
+		if(MyInput.isDown(MyInput.BUTTON_LEFT_SHIFT)){
+			//rocketOn();
+		}
+		
+	}
+	
+	public void rocketOn(){
+		//box.applyForceToCenter(0,2, true);
+		//box.applyAngularImpulse(2, true);
+		//box.setLinearVelocity(1,1);
+		if(fuel>0){
+			float x = (float)Math.sin(craft.getAngle());// X axis multiplyer
+			float y = (float)Math.cos(craft.getAngle()); //Y multiplyer
+			craft.applyForceToCenter(-1f*x,1f*y,true);
+			//System.out.println("X: "+-5f*x+" Y: "+5f*y);
+			//burnFuel();
+			
+		}
+		
+		//craft.applyForceToCenter(-(float)Math.sin(craft.getAngle()*1),2,true);
+		//box.applyForceToCenter(-(float)Math.sin(box.getAngle()*2),2,true);
+	}
+	
+	private void burnFuel(){
+		fuel -= 0.1f;
+	}
+	
+	public void rotateLeft(){
+		//float nextAngle = box.getAngle() + box.getAngularVelocity() / 60.0f;
+		//float totalRotation = des
+		craft.setAngularVelocity(1f);
+		//box.setAngularVelocity(0.8f);
+		
+		//box.setTransform(box.getPosition(), (float) (90f*(Math.PI/180)));
+	}
+	
+	public void rotateRight(){
+		craft.setAngularVelocity(-1f);
+		//craft.applyAngularImpulse(1000, true);
+		
+		//craft.applyAngularImpulse(1000, true);
+		
+	}
+	public static void hasCrashed(){
+		isCrashed = true;
+		
+	}
+	
+	public static void fullTank(){
+		fuel = 100;
+		Player.fullTank();
+	}
+	public boolean checkCrash(){
+		
+		return true;
+	}
+	
+	public void stopRotate(){
+		//craft.setAngularVelocity(0);
+		if(craft.getAngularVelocity()<0.1 & craft.getAngularVelocity()>-0.1){
+			craft.setAngularVelocity(0);
+		}
+		if(craft.getAngularVelocity()<0.0f){
+			craft.setAngularVelocity(craft.getAngularVelocity()+0.1f);
+		}
+		
+		if(craft.getAngularVelocity()>0.0f)
+		{
+			craft.setAngularVelocity(craft.getAngularVelocity()-0.1f);
+		}
+		
+		
+	}
+
+	@Override
+	public void update(float dt) {
+		//update the world
+		//handleInput();
+		playerCraft.playerUpdate();
+		if(!isCrashed){
+			world.step(dt, 6, 2);
+		}
+		
+		
+		
+		
+		
+		//velocity.y = craft.getLinearVelocity().y;
+		//velocity.x = craft.getLinearVelocity().x;
+		
+		
+	}
+	
+	
+	
+
+
+	@Override
+	public void render() {
+		//clear screen
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//draw box 2dworld with b2dCam
+		b2dr.render(world, b2dCam.combined);
+		
+		//b2dr.render(world, cam.combined);
+		sb.setProjectionMatrix(cam.combined);
+		sb.begin();
+		font.getData().setScale(0.5f,0.5f);
+		//String.format("%.2f", velocity.y);
+		font.draw(sb,"Fuel: "+String.format("%.2f", playerCraft.getFuel()),5,230);
+		//font.draw(sb, "Y Vel: "+String.format("%.2f", velocity.y),  5, 220);
+		//font.draw(sb, "X Vel: "+String.format("%.2f", velocity.x),  5, 210);
+		//font.draw(sb, "SIN of craft angle: "+String.format("%.2f", (float)Math.sin(craft.getAngle())),  5, 200);
+		//font.draw(sb, "COS of craft angle: "+String.format("%.2f", (float)Math.cos(craft.getAngle())),  5, 190);
+		if(isCrashed){
+			font.getData().setScale(1.4f,1.4f);
+			font.draw(sb,"YOU CRASHED!",100,150);
+		}
+		sb.end();
+		
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+private void createPlatform(){
+		
+		//Playform 1
+		bdef.position.set(160/PPM,0/PPM);
+		bdef.type = BodyType.StaticBody;
+		Body body = world.createBody(bdef);
+		
+		
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(50/PPM, 5/PPM);
+		
+		
+		fdef.shape = shape;
+		body.createFixture(fdef).setUserData("GROUND");
+		
+		//Platform2
+		bdef.position.set(500/PPM,300/PPM);
+		bdef.type = BodyType.StaticBody;
+		body = world.createBody(bdef);
+		shape.setAsBox(100/PPM, 5/PPM);
+		
+		
+		fdef.shape = shape;
+		body.createFixture(fdef).setUserData("GROUND");
+		
+		//Platrorm 3
+		//Platform2
+		bdef.position.set(50/PPM,59/PPM);
+		bdef.type = BodyType.StaticBody;
+		body = world.createBody(bdef);
+		shape.setAsBox(100/PPM, 5/PPM);
+		
+		
+		fdef.shape = shape;
+		body.createFixture(fdef).setUserData("GROUND");
+				 
+				
+		
+	}
+	
+	private void createShip(){
+		
+		
+		
+		//Create craftPod
+		craftPos = new Vector2(160/PPM,130/PPM);
+		
+		bdef.position.set(craftPos);
+		bdef.type = BodyType.DynamicBody;
+		
+		craft = world.createBody(bdef);
+		//craft.setFixedRotation(false);
+		
+		//craft.setFixedRotation(false);
+		//craft.setMassData(new MassData());
+		System.out.println("MASS: "+craft.getMass());
+		/////////////////////////////
+		//Make box into craft shape
+		PolygonShape polygonShape = new PolygonShape();;
+		float angle ;
+		vertices = new Vector2[8];
+	    for (int i = 0; i < 8; i++) {
+	    	angle =  (float) (-i/6.0f * 360f*(Math.PI/180));
+	    	//System.out.println((float)Math.sin(angle));
+	      //vertices[i].set(angle, angle);
+	    	vertices[i] = new Vector2((float)Math.sin(angle),(float)Math.cos(angle));
+	      //vertices[i].x = (float)Math.sin(angle);
+	      //vertices[i].y = (float)Math.cos(angle);
+	    }
+	    
+	    vertices[3].set( 0, 0 ); //change one vertex to be pointy
+	    polygonShape.set(vertices);
+	   
+		fdef.shape = polygonShape;
+		fdef.density = 0.1f;
+		fdef.friction = 0.3f;
+		
+		craft.createFixture(fdef).setUserData("box");
+		
+		//CreateCraftBox
+		
+		//bdef.position.set(160/PPM,150/PPM);
+		bdef.type = BodyType.DynamicBody;
+		//box = world.createBody(bdef);
+		shape.setAsBox(22/PPM, 4/PPM, new Vector2(0,-13f/PPM), 0);
+		//shape.setAsBox(22/PPM, 8/PPM);
+		fdef.shape = shape;
+		craft.createFixture(fdef);
+		
+		//Leg Left
+		shape.setAsBox(1/PPM, 10/PPM, new Vector2(20/PPM,-25f/PPM), (float)(30f*(Math.PI/180)));
+		//shape.setAsBox(22/PPM, 8/PPM);
+		fdef.shape = shape;
+		fdef.density = 0.1f;
+		fdef.friction = 0.3f;
+		craft.createFixture(fdef);
+		
+		//Tank
+		shape.setAsBox(1/PPM, 10/PPM, new Vector2(-20/PPM,-25f/PPM), (float)(-30f*(Math.PI/180)));
+		//shape.setAsBox(22/PPM, 8/PPM);
+		fdef.shape = shape;
+		fdef.density = 0.1f;
+		fdef.friction = 0.3f;
+		craft.createFixture(fdef);
+		
+		//right foot
+		
+		shape.setAsBox(5/PPM, 0.5f/PPM, new Vector2(-25/PPM,-34f/PPM), 0);
+		//shape.setAsBox(22/PPM, 8/PPM);
+		fdef.shape = shape;
+		fdef.density = 0.1f;
+		fdef.friction = 0.3f;
+		craft.createFixture(fdef).setUserData("LEFT_LG");
+		
+		//Right foot
+		
+		shape.setAsBox(5/PPM, 0.5f/PPM, new Vector2(25/PPM,-34f/PPM), 0);
+		//shape.setAsBox(22/PPM, 8/PPM);
+		fdef.shape = shape;
+		fdef.density = 0.1f;
+		fdef.friction = 0.3f;
+		craft.createFixture(fdef).setUserData("RIGH_LG");
+		
+		
+		
+	}
+
+}
+

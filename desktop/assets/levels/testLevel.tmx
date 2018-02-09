@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="800" height="160" tilewidth="5" tileheight="5" nextobjectid="128">
+ <layer name="Tile Layer 1" width="800" height="160">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20MH6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvgbQaQAB
+  </data>
+ </layer>
+ <objectgroup name="terrain">
+  <object id="55" x="22.6667" y="798.667">
+   <polygon points="-2.66667,1.33333 -24,-121.333 -23.3333,2.66667"/>
+  </object>
+  <object id="58" x="180" y="799">
+   <polygon points="0.666667,1.33333 35,-104 80,-104 80,1"/>
+  </object>
+  <object id="59" x="260.333" y="726.333">
+   <polygon points="-0.666667,-0.666667 -0.333333,-111.333 39.6667,73.6667 -0.666667,74.3333"/>
+  </object>
+  <object id="63" x="21" y="800">
+   <polygon points="0,0 34,-65 94,-65 159,0"/>
+  </object>
+  <object id="66" x="300.667" y="798.667">
+   <polygon points="-0.666667,1.33333 38.6667,-118.667 89.3333,-118.667 104.333,1.33333"/>
+  </object>
+  <object id="67" x="404.482" y="790">
+   <polygon points="5.89734,0 43.4259,-14.5 60.0456,-30.5 90.5181,-40 85.5181,10 0.268061,9.25"/>
+  </object>
+  <object id="69" x="491" y="798.75">
+   <polygon points="-1,1.25 14,-143.75 19,-153.75 39,-138.75 59,1.25"/>
+  </object>
+  <object id="72" x="553.333" y="796">
+   <polygon points="0,0 -8,-58.6667 91.6667,-326 166.667,-326 176.667,-211 176.667,-76 110.667,5.33333"/>
+  </object>
+  <object id="79" x="805.333" y="797.333">
+   <polygon points="0,0 269.667,-332.333 670.667,-338.667 1250.67,-2.66667"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="landingZone">
+  <object id="102" name="10" x="55" y="733.364" width="59.4545" height="1.63636"/>
+  <object id="107" name="20" x="338.75" y="678.625" width="51.125" height="1.375"/>
+  <object id="108" name="25" x="644.833" y="468.125" width="74.6667" height="1.45833"/>
+  <object id="114" name="25" x="697" y="760.5" width="134" height="4.5"/>
+  <object id="104" name="15" x="215.125" y="693.25" width="44.625" height="1.375"/>
+ </objectgroup>
+ <objectgroup name="finalLz">
+  <object id="127" name="100" x="1075.33" y="459.667" width="111.667" height="4.33333"/>
+ </objectgroup>
+</map>

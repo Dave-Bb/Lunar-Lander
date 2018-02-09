@@ -7,7 +7,9 @@ This is a clone of the classic Lunar Lander game.
 Controls: 
 
 Fire Rocket: SHIFT 
+
 Lander Roll: Arrow Keys 
+
 Pause: Escape
 
 Use the arrow keys and space bar in the menu to navigate. 

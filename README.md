@@ -4,7 +4,7 @@ Lunar Lander Game, based off the classic arcade game. Written using LibGDX and B
 
 This is a clone of the classic Lunar Lander game. 
 
-Controls: 
+# Controls: 
 
 Fire Rocket: SHIFT 
 
